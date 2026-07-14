@@ -40,11 +40,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<StdModel> students = [];
-  FirebaseFirestore db = FirebaseFirestore.instance;
-  final StdCollectionName = 'stdData';
+  final FirebaseFirestore db = FirebaseFirestore.instance;
+  final String stdCollectionName = 'stdData';
   Future<void> getStdData() async {
     try {
-      final table = await db.collection(StdCollectionName).get();
+      final table = await db.collection(stdCollectionName).get();
       students = table.docs
           .map((e) => StdModel.fromJson(e.id, e.data()))
           .toList();
@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> updateStdAttendance(String docID, String atd) async {
     try {
-      await db.collection(StdCollectionName).doc(docID).update({'atd': atd});
+      await db.collection(stdCollectionName).doc(docID).update({'atd': atd});
     } catch (e) {
       log(e.toString());
     }
@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> deleteStd(String docID) async {
     try {
-      await db.collection(StdCollectionName).doc(docID).delete();
+      await db.collection(stdCollectionName).doc(docID).delete();
     } catch (e) {
       log(e.toString());
     }
@@ -261,8 +261,8 @@ class AddStudentPage extends StatelessWidget {
   final TextEditingController? ageController = TextEditingController();
   final TextEditingController? rollNoController = TextEditingController();
 
-  FirebaseFirestore db = FirebaseFirestore.instance;
-
+  final FirebaseFirestore db = FirebaseFirestore.instance;
+  final String stdCollectionName = 'stdData';
   Future<void> saveStdData() async {
     try {
       final student = StdModel(
@@ -275,7 +275,7 @@ class AddStudentPage extends StatelessWidget {
       if (nameController!.text.isNotEmpty &&
           ageController!.text.isNotEmpty &&
           rollNoController!.text.isNotEmpty) {
-        await db.collection('stdData').add(student.tojson());
+        await db.collection(stdCollectionName).add(student.tojson());
         nameController!.clear();
         ageController!.clear();
         rollNoController!.clear();
